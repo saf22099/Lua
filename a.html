@@ -74,6 +74,17 @@ input {
     margin-top: 25px;
 }
 
+.message {
+    position: absolute;
+    top: 165px;
+    width: 100%;
+    opacity: 0;
+    font-size: 22px;
+    letter-spacing: 2px;
+    transition: opacity 3s;
+    pointer-events: none;
+}
+
 .glitch {
     animation: glitch 0.15s infinite;
 }
@@ -85,17 +96,6 @@ input {
     75% { transform: translate(-1px, 1px); }
     100% { transform: translate(0); }
 }
-
-.message {
-    position: absolute;
-    top: 160px;
-    width: 100%;
-    opacity: 0;
-    font-size: 22px;
-    letter-spacing: 2px;
-    transition: opacity 3s;
-    pointer-events: none;
-}
 </style>
 </head>
 
@@ -104,7 +104,7 @@ input {
 <div class="container" id="container">
     <div class="moon" id="moon"></div>
 
-    <div class="message" id="message">Estou aqui.</div>
+    <div class="message" id="message">.iuqa uotsE</div>
 
     <input
         id="password"
@@ -134,6 +134,8 @@ const video = document.getElementById("video");
 const moon = document.getElementById("moon");
 const message = document.getElementById("message");
 
+message.textContent = message.textContent.split("").reverse().join("");
+
 input.focus();
 
 input.addEventListener("keydown", e => {
@@ -141,7 +143,10 @@ input.addEventListener("keydown", e => {
         const value = input.value.trim().toLowerCase();
 
         if (value === "lua") {
-            easterEgg();
+            if (!localStorage.getItem("moon_seen")) {
+                easterEgg();
+                localStorage.setItem("moon_seen", "true");
+            }
             input.value = "";
             return;
         }
