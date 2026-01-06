@@ -38,12 +38,6 @@ body {
         inset -12px -12px 30px rgba(0,0,0,0.4),
         inset 10px 10px 18px rgba(255,255,255,0.12);
     animation: spin 40s linear infinite;
-    transition: all 2s;
-}
-
-.moon.pure {
-    background: white;
-    box-shadow: 0 0 45px rgba(255,255,255,0.9);
 }
 
 @keyframes spin {
@@ -69,10 +63,23 @@ input {
     margin-top: 12px;
 }
 
-.video {
+.videoLink {
     display: none;
     margin-top: 25px;
+    font-size: 14px;
+    letter-spacing: 1px;
     animation: fadeIn 3s forwards;
+}
+
+.videoLink a {
+    color: white;
+    text-decoration: none;
+    opacity: 0.7;
+}
+
+.videoLink a:hover {
+    opacity: 1;
+    text-decoration: underline;
 }
 
 .message {
@@ -108,7 +115,7 @@ input {
 <body>
 
 <div class="container" id="container">
-    <div class="moon" id="moon"></div>
+    <div class="moon"></div>
 
     <div class="message" id="message">.iuqa uotsE</div>
 
@@ -123,23 +130,17 @@ input {
         O vídeo fala o maior medo e preconceito.
     </div>
 
-    <div class="video" id="video">
-        <iframe
-            width="560"
-            height="315"
-            src="https://www.youtube.com/embed/1DLpDiw-tgs?autoplay=1"
-            frameborder="0"
-            allow="autoplay; encrypted-media"
-            allowfullscreen>
-        </iframe>
+    <div class="videoLink" id="videoLink">
+        <a href="https://youtu.be/1DLpDiw-tgs" target="_blank">
+            ▶ Abrir o vídeo
+        </a>
     </div>
 </div>
 
 <script>
 const input = document.getElementById("password");
 const container = document.getElementById("container");
-const video = document.getElementById("video");
-const moon = document.getElementById("moon");
+const videoLink = document.getElementById("videoLink");
 const message = document.getElementById("message");
 
 message.textContent = message.textContent.split("").reverse().join("");
@@ -154,59 +155,4 @@ input.addEventListener("keydown", e => {
     if (value === "lua") {
         if (!localStorage.getItem("lua_answered")) {
             respond("...");
-            localStorage.setItem("lua_answered", "true");
-        }
-        input.value = "";
-        return;
-    }
-
-    if (value === "el") {
-        if (!localStorage.getItem("el_answered")) {
-            respond("Eu sei...");
-            localStorage.setItem("el_answered", "true");
-        }
-        input.value = "";
-        return;
-    }
-
-    if (value === "enxovia") {
-        if (!localStorage.getItem("enxovia_answered")) {
-            respond("A Lua é bela, não?");
-            localStorage.setItem("enxovia_answered", "true");
-        }
-        input.value = "";
-        return;
-    }
-
-    if (value === "xenofobia") {
-        container.classList.add("glitch");
-        setTimeout(() => {
-            moon.remove();
-            input.remove();
-            document.querySelector(".hint").remove();
-            video.style.display = "block";
-            container.classList.remove("glitch");
-        }, 1000);
-        return;
-    }
-
-    container.classList.add("glitch");
-    setTimeout(() => location.reload(), 1200);
-});
-
-function respond(text) {
-    const msg = document.createElement("div");
-    msg.className = "message";
-    msg.textContent = text;
-    msg.style.opacity = "1";
-    container.appendChild(msg);
-
-    setTimeout(() => {
-        msg.style.opacity = "0";
-        setTimeout(() => msg.remove(), 3000);
-    }, 2500);
-}
-</script>
-
-</body>
-</html>
+            localStorage.setItem("lua_answered_
