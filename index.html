@@ -68,7 +68,7 @@ input {
     margin-top: 25px;
     font-size: 14px;
     letter-spacing: 1px;
-    animation: fadeIn 3s forwards;
+    animation: fadeIn 2s forwards;
 }
 
 .videoLink a {
@@ -87,72 +87,4 @@ input {
     top: 165px;
     width: 100%;
     opacity: 0;
-    font-size: 22px;
-    letter-spacing: 2px;
-    transition: opacity 3s;
-    pointer-events: none;
-}
-
-.glitch {
-    animation: glitch 0.15s infinite;
-}
-
-@keyframes glitch {
-    0% { transform: translate(0); }
-    25% { transform: translate(-2px, 2px); }
-    50% { transform: translate(2px, -2px); }
-    75% { transform: translate(-1px, 1px); }
-    100% { transform: translate(0); }
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-</style>
-</head>
-
-<body>
-
-<div class="container" id="container">
-    <div class="moon"></div>
-
-    <div class="message" id="message">.iuqa uotsE</div>
-
-    <input
-        id="password"
-        type="text"
-        autocomplete="off"
-        placeholder="Digite a palavra"
-    >
-
-    <div class="hint">
-        O vídeo fala o maior medo e preconceito.
-    </div>
-
-    <div class="videoLink" id="videoLink">
-        <a href="https://youtu.be/1DLpDiw-tgs" target="_blank">
-            ▶ Abrir o vídeo
-        </a>
-    </div>
-</div>
-
-<script>
-const input = document.getElementById("password");
-const container = document.getElementById("container");
-const videoLink = document.getElementById("videoLink");
-const message = document.getElementById("message");
-
-message.textContent = message.textContent.split("").reverse().join("");
-
-input.focus();
-
-input.addEventListener("keydown", e => {
-    if (e.key !== "Enter") return;
-
-    const value = input.value.trim().toLowerCase();
-
-    if (value === "lua") {
-        if (!localStorage.getItem("lua_answered")) {
-            respond("...");
-            localStorage.setItem("lua_answered_
+    font-size: 2
