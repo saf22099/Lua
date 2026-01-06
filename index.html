@@ -86,11 +86,6 @@ input {
     pointer-events: none;
 }
 
-#elMessage {
-    top: 205px;
-    font-size: 16px;
-}
-
 .glitch {
     animation: glitch 0.15s infinite;
 }
@@ -116,7 +111,6 @@ input {
     <div class="moon" id="moon"></div>
 
     <div class="message" id="message">.iuqa uotsE</div>
-    <div class="message" id="elMessage">El, você está ouvindo?</div>
 
     <input
         id="password"
@@ -147,77 +141,69 @@ const container = document.getElementById("container");
 const video = document.getElementById("video");
 const moon = document.getElementById("moon");
 const message = document.getElementById("message");
-const elMessage = document.getElementById("elMessage");
 
 message.textContent = message.textContent.split("").reverse().join("");
-
-let unlocked = false;
 
 input.focus();
 
 input.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-        const value = input.value.trim().toLowerCase();
+    if (e.key !== "Enter") return;
 
-        if (value === "lua") {
-            if (unlocked && !localStorage.getItem("lua_answered")) {
-                luaRespond();
-                localStorage.setItem("lua_answered", "true");
-            } else if (!localStorage.getItem("moon_seen")) {
-                easterEgg();
-                localStorage.setItem("moon_seen", "true");
-            }
-            input.value = "";
-            return;
+    const value = input.value.trim().toLowerCase();
+
+    if (value === "lua") {
+        if (!localStorage.getItem("lua_answered")) {
+            respond("...");
+            localStorage.setItem("lua_answered", "true");
         }
-
-        if (value === "xenofobia") {
-            unlocked = true;
-            container.classList.add("glitch");
-
-            setTimeout(() => {
-                moon.remove();
-                input.remove();
-                document.querySelector(".hint").remove();
-
-                elMessage.style.opacity = "1";
-
-                setTimeout(() => {
-                    video.style.display = "block";
-                }, 2000);
-
-                container.classList.remove("glitch");
-            }, 1000);
-        } else {
-            container.classList.add("glitch");
-            setTimeout(() => location.reload(), 1200);
-        }
+        input.value = "";
+        return;
     }
+
+    if (value === "el") {
+        if (!localStorage.getItem("el_answered")) {
+            respond("Eu sei...");
+            localStorage.setItem("el_answered", "true");
+        }
+        input.value = "";
+        return;
+    }
+
+    if (value === "enxovia") {
+        if (!localStorage.getItem("enxovia_answered")) {
+            respond("A Lua é bela, não?");
+            localStorage.setItem("enxovia_answered", "true");
+        }
+        input.value = "";
+        return;
+    }
+
+    if (value === "xenofobia") {
+        container.classList.add("glitch");
+        setTimeout(() => {
+            moon.remove();
+            input.remove();
+            document.querySelector(".hint").remove();
+            video.style.display = "block";
+            container.classList.remove("glitch");
+        }, 1000);
+        return;
+    }
+
+    container.classList.add("glitch");
+    setTimeout(() => location.reload(), 1200);
 });
 
-function easterEgg() {
-    moon.classList.add("pure");
-    message.style.opacity = "1";
+function respond(text) {
+    const msg = document.createElement("div");
+    msg.className = "message";
+    msg.textContent = text;
+    msg.style.opacity = "1";
+    container.appendChild(msg);
 
     setTimeout(() => {
-        message.style.opacity = "0";
-    }, 3500);
-
-    setTimeout(() => {
-        moon.classList.remove("pure");
-    }, 5000);
-}
-
-function luaRespond() {
-    const temp = document.createElement("div");
-    temp.className = "message";
-    temp.textContent = "...";
-    temp.style.opacity = "1";
-    container.appendChild(temp);
-
-    setTimeout(() => {
-        temp.style.opacity = "0";
-        setTimeout(() => temp.remove(), 3000);
+        msg.style.opacity = "0";
+        setTimeout(() => msg.remove(), 3000);
     }, 2500);
 }
 </script>
