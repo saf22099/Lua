@@ -90,7 +90,7 @@ input {
     <div class="moon" id="moon"></div>
 
     <input id="password" type="text" autocomplete="off" placeholder="Digite a palavra">
-    <div class="hint" id="hint">O vídeo fala o maior medo e preconceito.</div>
+    <div class="hint" id="hint">Desconhecido.</div>
 </div>
 
 <script>
@@ -147,7 +147,7 @@ input.addEventListener("keydown", e => {
         return;
     }
 
-
+  
     if ((value === "princípio" || value === "principio") && !localStorage.getItem("principio")) {
         localStorage.setItem("principio", "1");
 
