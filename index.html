@@ -118,7 +118,6 @@ input {
 <body>
 
 <div class="container" id="container">
-
     <div class="moon" id="moon">
         <div class="moon-inner"></div>
     </div>
@@ -134,10 +133,18 @@ input {
             ABRIR O VÍDEO
         </a>
     </div>
-
 </div>
 
 <script>
+if (localStorage.getItem("elohim_lock")) {
+    document.body.innerHTML = "";
+    document.body.classList.add("glitch");
+    setInterval(() => {
+        document.body.classList.toggle("glitch");
+    }, 200);
+    throw new Error("LOCKED");
+}
+
 const input = document.getElementById("password");
 const container = document.getElementById("container");
 const moon = document.getElementById("moon");
@@ -153,6 +160,13 @@ input.addEventListener("keydown", e => {
     if (e.key !== "Enter" || locked) return;
 
     const value = input.value.trim().toLowerCase();
+
+    if (value === "elohim") {
+        localStorage.setItem("elohim_lock", "1");
+        container.classList.add("glitch");
+        setTimeout(() => location.reload(), 800);
+        return;
+    }
 
     if (value === "lua" && !localStorage.getItem("egg_lua")) {
         localStorage.setItem("egg_lua", "1");
@@ -239,7 +253,6 @@ function startPrincipio() {
             triggerGlitchReset();
             return;
         }
-
         showMessage(textos[i]);
         growMoon();
         i++;
