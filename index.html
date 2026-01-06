@@ -38,16 +38,11 @@ body {
         inset -14px -14px 30px rgba(0,0,0,0.45),
         inset 10px 10px 18px rgba(255,255,255,0.15);
     animation: spin 40s linear infinite;
-    transition: all 6s ease;
+    transition: transform 40s linear;
 }
 
 .moon.approach {
-    transform: scale(1.6);
-}
-
-.moon.expand {
-    width: 250vw;
-    height: 250vw;
+    transform: scale(2.2);
 }
 
 @keyframes spin {
@@ -136,7 +131,7 @@ input {
     </div>
 
     <div class="video-link" id="videoLink">
-        <a href="https://www.tiktok.com/@ofz_yvoz/video/7592015137536544007" target="_blank">
+        <a href="https://www.youtube.com/watch?v=1DLpDiw-tgs" target="_blank">
             ABRIR O VÍDEO
         </a>
     </div>
@@ -231,8 +226,8 @@ function startPrincipio() {
     const interval = setInterval(() => {
         if (i >= textos.length) {
             clearInterval(interval);
-            moon.classList.add("expand");
-            setTimeout(() => location.reload(), 6000);
+            container.classList.add("glitch");
+            setTimeout(() => location.reload(), 1500);
             return;
         }
         showMessage(textos[i]);
