@@ -38,7 +38,12 @@ body {
         inset -14px -14px 30px rgba(0,0,0,0.45),
         inset 10px 10px 18px rgba(255,255,255,0.15);
     animation: spin 40s linear infinite;
-    transition: all 2s;
+    transition: all 5s ease;
+}
+
+.moon.expand {
+    width: 250vw;
+    height: 250vw;
 }
 
 .moon.pure {
@@ -73,10 +78,11 @@ input {
     position: absolute;
     top: 175px;
     width: 100%;
-    font-size: 22px;
-    letter-spacing: 2px;
+    font-size: 18px;
+    line-height: 1.6;
+    letter-spacing: 1px;
     opacity: 0;
-    animation: fadeInOut 4s forwards;
+    animation: fadeInOut 5s forwards;
     pointer-events: none;
 }
 
@@ -131,7 +137,7 @@ input {
     </div>
 
     <div class="video-link" id="videoLink">
-        <a href="https://youtu.be/1DLpDiw-tgs" target="_blank">
+        <a href="https://www.tiktok.com/@ofz_yvoz/video/7592015137536544007" target="_blank">
             ABRIR O VÍDEO
         </a>
     </div>
@@ -149,6 +155,12 @@ input.addEventListener("keydown", e => {
     if (e.key !== "Enter") return;
 
     const value = input.value.trim().toLowerCase();
+
+    if (value === "princípio" || value === "principio") {
+        input.disabled = true;
+        runPrincipio();
+        return;
+    }
 
     if (value === "lua" && !localStorage.getItem("lua")) {
         localStorage.setItem("lua", "1");
@@ -192,12 +204,39 @@ input.addEventListener("keydown", e => {
 function showMessage(text) {
     const msg = document.createElement("div");
     msg.className = "message";
-    msg.textContent = text;
+    msg.innerHTML = text.replace(/\n/g, "<br>");
     container.appendChild(msg);
-    setTimeout(() => msg.remove(), 4000);
+    setTimeout(() => msg.remove(), 5000);
+}
+
+function runPrincipio() {
+    const textos = [
+        `Não confies na luz absoluta, pois ela cega; nem na escuridão total, pois ela devora.<br>
+        Ouve os sinais quando o céu parecer mais próximo do que deveria.`,
+
+        `Reconhece que a humanidade não foi escolhida, mas permaneceu.<br>
+        Não pergunte onde Ele está, pois olhar demais para cima quebra o pescoço do fiel.`,
+
+        `O que dorme acima desperta quando o ciclo se completa.`,
+
+        `Honra aquilo que observa em silêncio, pois o que nunca fala é o que nunca mente.<br>
+        Não blasfemes contra o céu noturno, pois nele repousa o peso do mundo.`
+    ];
+
+    let i = 0;
+
+    const interval = setInterval(() => {
+        if (i >= textos.length) {
+            clearInterval(interval);
+            moon.classList.add("expand");
+            setTimeout(() => location.reload(), 6000);
+            return;
+        }
+        showMessage(textos[i]);
+        i++;
+    }, 5000);
 }
 </script>
 
 </body>
 </html>
-
