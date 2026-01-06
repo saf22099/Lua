@@ -14,6 +14,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
 .container {
@@ -31,19 +32,18 @@ body {
         radial-gradient(circle at 60% 40%, rgba(0,0,0,0.2) 8%, transparent 9%),
         radial-gradient(circle at 45% 65%, rgba(0,0,0,0.18) 5%, transparent 6%),
         radial-gradient(circle at 70% 70%, rgba(0,0,0,0.22) 7%, transparent 8%),
-        radial-gradient(circle at 35% 50%, rgba(0,0,0,0.15) 4%, transparent 5%),
         radial-gradient(circle at 30% 30%, #ffffff, #dcdcdc 40%, #bdbdbd 65%, #9e9e9e 100%);
     box-shadow:
         0 0 25px rgba(255,255,255,0.25),
         inset -12px -12px 30px rgba(0,0,0,0.4),
         inset 10px 10px 18px rgba(255,255,255,0.12);
     animation: spin 40s linear infinite;
-    transition: background 1.5s, box-shadow 1.5s;
+    transition: all 2s;
 }
 
 .moon.pure {
     background: white;
-    box-shadow: 0 0 40px rgba(255,255,255,0.8);
+    box-shadow: 0 0 45px rgba(255,255,255,0.9);
 }
 
 @keyframes spin {
@@ -72,6 +72,7 @@ input {
 .video {
     display: none;
     margin-top: 25px;
+    animation: fadeIn 3s forwards;
 }
 
 .message {
@@ -85,6 +86,11 @@ input {
     pointer-events: none;
 }
 
+#elMessage {
+    top: 205px;
+    font-size: 16px;
+}
+
 .glitch {
     animation: glitch 0.15s infinite;
 }
@@ -96,6 +102,11 @@ input {
     75% { transform: translate(-1px, 1px); }
     100% { transform: translate(0); }
 }
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 </style>
 </head>
 
@@ -105,6 +116,7 @@ input {
     <div class="moon" id="moon"></div>
 
     <div class="message" id="message">.iuqa uotsE</div>
+    <div class="message" id="elMessage">El, você está ouvindo?</div>
 
     <input
         id="password"
@@ -119,10 +131,12 @@ input {
 
     <div class="video" id="video">
         <iframe
-          src="https://www.tiktok.com/embed/7592015137536544007"
-          width="325"
-          height="575"
-          allowfullscreen>
+            width="560"
+            height="315"
+            src="https://www.youtube.com/embed/1DLpDiw-tgs?autoplay=1"
+            frameborder="0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen>
         </iframe>
     </div>
 </div>
@@ -133,8 +147,11 @@ const container = document.getElementById("container");
 const video = document.getElementById("video");
 const moon = document.getElementById("moon");
 const message = document.getElementById("message");
+const elMessage = document.getElementById("elMessage");
 
 message.textContent = message.textContent.split("").reverse().join("");
+
+let unlocked = false;
 
 input.focus();
 
@@ -143,7 +160,10 @@ input.addEventListener("keydown", e => {
         const value = input.value.trim().toLowerCase();
 
         if (value === "lua") {
-            if (!localStorage.getItem("moon_seen")) {
+            if (unlocked && !localStorage.getItem("lua_answered")) {
+                luaRespond();
+                localStorage.setItem("lua_answered", "true");
+            } else if (!localStorage.getItem("moon_seen")) {
                 easterEgg();
                 localStorage.setItem("moon_seen", "true");
             }
@@ -152,12 +172,20 @@ input.addEventListener("keydown", e => {
         }
 
         if (value === "xenofobia") {
+            unlocked = true;
             container.classList.add("glitch");
+
             setTimeout(() => {
                 moon.remove();
                 input.remove();
                 document.querySelector(".hint").remove();
-                video.style.display = "block";
+
+                elMessage.style.opacity = "1";
+
+                setTimeout(() => {
+                    video.style.display = "block";
+                }, 2000);
+
                 container.classList.remove("glitch");
             }, 1000);
         } else {
@@ -178,6 +206,19 @@ function easterEgg() {
     setTimeout(() => {
         moon.classList.remove("pure");
     }, 5000);
+}
+
+function luaRespond() {
+    const temp = document.createElement("div");
+    temp.className = "message";
+    temp.textContent = "...";
+    temp.style.opacity = "1";
+    container.appendChild(temp);
+
+    setTimeout(() => {
+        temp.style.opacity = "0";
+        setTimeout(() => temp.remove(), 3000);
+    }, 2500);
 }
 </script>
 
