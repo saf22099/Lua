@@ -168,6 +168,12 @@ input.addEventListener("keydown", e => {
         return;
     }
 
+    if (value === "אֱלוֹהִים" && !localStorage.getItem("egg_hebrew")) {
+        localStorage.setItem("egg_hebrew", "1");
+        triggerEgg("Olhe para o céu escuro...");
+        return;
+    }
+
     if (value === "lua" && !localStorage.getItem("egg_lua")) {
         localStorage.setItem("egg_lua", "1");
         triggerEgg("Estou aqui.");
