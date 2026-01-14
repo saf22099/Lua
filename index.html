@@ -23,21 +23,11 @@ html, body {
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(1px 1px at 5% 15%, white, transparent),
-        radial-gradient(1px 1px at 12% 40%, white, transparent),
-        radial-gradient(1px 1px at 18% 80%, white, transparent),
-        radial-gradient(1px 1px at 25% 25%, white, transparent),
-        radial-gradient(2px 2px at 30% 60%, white, transparent),
-        radial-gradient(1px 1px at 38% 10%, white, transparent),
-        radial-gradient(1px 1px at 45% 75%, white, transparent),
-        radial-gradient(2px 2px at 52% 45%, white, transparent),
-        radial-gradient(1px 1px at 60% 20%, white, transparent),
-        radial-gradient(1px 1px at 68% 85%, white, transparent),
-        radial-gradient(2px 2px at 75% 50%, white, transparent),
-        radial-gradient(1px 1px at 82% 30%, white, transparent),
-        radial-gradient(1px 1px at 90% 70%, white, transparent),
-        radial-gradient(2px 2px at 95% 15%, white, transparent);
-    opacity: 0.85;
+        radial-gradient(1px 1px at 10% 20%, white, transparent),
+        radial-gradient(1px 1px at 30% 60%, white, transparent),
+        radial-gradient(1px 1px at 70% 40%, white, transparent),
+        radial-gradient(1px 1px at 85% 80%, white, transparent);
+    opacity: 0.6;
 }
 
 .Lua {
@@ -47,7 +37,7 @@ html, body {
     width: 180px;
     height: 180px;
     transform: translate(-50%, -50%) scale(1);
-    transition: opacity 10s ease;
+    transition: opacity 8s ease;
 }
 
 .Lua-Interior {
@@ -55,19 +45,14 @@ html, body {
     height: 100%;
     border-radius: 50%;
     background:
-        radial-gradient(circle at 30% 30%, rgba(0,0,0,0.25) 6%, transparent 7%),
-        radial-gradient(circle at 60% 40%, rgba(0,0,0,0.2) 9%, transparent 10%),
-        radial-gradient(circle at 45% 65%, rgba(0,0,0,0.18) 6%, transparent 7%),
-        radial-gradient(circle at 70% 70%, rgba(0,0,0,0.22) 8%, transparent 9%),
         radial-gradient(circle at 35% 35%, #ffffff, #dcdcdc 45%, #bdbdbd 70%, #9e9e9e 100%);
     box-shadow:
-        0 0 35px rgba(255,255,255,0.25),
-        inset -14px -14px 30px rgba(0,0,0,0.45),
-        inset 10px 10px 18px rgba(255,255,255,0.15);
-    animation: Girar 60s linear infinite;
+        0 0 30px rgba(255,255,255,0.25),
+        inset -12px -12px 25px rgba(0,0,0,0.5);
+    animation: girar 60s linear infinite;
 }
 
-@keyframes Girar {
+@keyframes girar {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
@@ -90,7 +75,7 @@ html, body {
     text-align: center;
     font-size: 34px;
     opacity: 0;
-    pointer-events: none; /* <<< TRAVA */
+    pointer-events: none;
     white-space: pre-line;
     animation: glitch 0.25s infinite;
 }
@@ -158,6 +143,15 @@ ESTÁ CONSUMADO
 </div>
 
 <script>
+/* ===== REFERÊNCIAS ===== */
+const Ceu = document.getElementById("Ceu");
+const Lua = document.getElementById("Lua");
+const Contador = document.getElementById("Contador");
+const Final = document.getElementById("Final");
+const Parte2 = document.getElementById("Parte2");
+const Campo = document.getElementById("Campo");
+const Resposta = document.getElementById("Resposta");
+
 /* ===== ESTADO ===== */
 if (localStorage.getItem("parte2") === "true") {
     Ceu.style.display = "none";
@@ -165,10 +159,13 @@ if (localStorage.getItem("parte2") === "true") {
     Parte2.style.display = "block";
 }
 
-/* ===== TIMER ===== */
-const alvo = new Date("2026-01-14T17:00:00");
-let escala = 1;
+/* ===== TIMER 17:00 ===== */
+const agora = new Date();
+const alvo = new Date();
+alvo.setHours(17,0,0,0);
+
 let terminou = false;
+let escala = 1;
 
 setInterval(() => {
     if (terminou) return;
@@ -180,13 +177,11 @@ setInterval(() => {
 
         Lua.style.opacity = 0;
         Final.style.opacity = 1;
-
-        /* >>> AGORA FICA CLICÁVEL <<< */
         Final.style.pointerEvents = "auto";
         Final.style.cursor = "pointer";
 
         setInterval(() => {
-            const bugs = ["00:00:00","01:15","12:40","09:28","01:07"];
+            const bugs = ["00:00:00","12:40","09:28","01:07"];
             Contador.textContent = bugs[Math.floor(Math.random()*bugs.length)];
         }, 700);
 
@@ -206,18 +201,17 @@ setInterval(() => {
     Lua.style.transform = `translate(-50%, -50%) scale(${escala})`;
 }, 1000);
 
-/* ===== CLIQUE FINAL ===== */
+/* ===== CLIQUE ===== */
 Final.onclick = () => {
-    if (!terminou) return; // segurança extra
-
+    if (!terminou) return;
     localStorage.setItem("parte2","true");
     Ceu.style.display = "none";
     Final.style.display = "none";
     Parte2.style.display = "block";
 };
 
-/* ===== PARTE 2 INPUT ===== */
-let respondeu = false;
+/* ===== PARTE 2 ===== */
+let respostaUsada = false;
 
 Campo.addEventListener("keydown", e => {
     if (e.key !== "Enter") return;
@@ -225,35 +219,29 @@ Campo.addEventListener("keydown", e => {
     const v = Campo.value.toLowerCase().trim();
     Campo.value = "";
 
-    if (respondeu) return;
-    respondeu = true;
+    if (!respostaUsada) {
+        respostaUsada = true;
 
-    if (v.includes("elohim")) falar("ELE OUVE");
-    else if (v.includes("anjo")) falar("O MENSAGEIRO CAIU");
-    else if (v.includes("lua")) falar("A PRISÃO OBSERVA");
-    else if (v.includes("verbo")) falar("E O VERBO SE CALOU");
-    else if (v.includes("reino")) falar("ELE SE APROXIMA");
-    else if (v.includes("chiclete")) falar("chicletiii!!");
-    else if (v === "poeta") {
-        Resposta.innerText =
-`Mande uma mensagem para mim.
-Diga:
+        if (v === "poeta") {
+            mostrar(`Mande uma mensagem para mim.\nDiga:\n"Poeta é um criador"`);
+            return;
+        }
 
-"Poeta é um criador"`;
-        Resposta.style.opacity = 1;
-        setTimeout(()=>Resposta.style.opacity=0,4000);
-    } else {
-        falar("...");
+        if (v.includes("elohim")) return mostrar("ELE OUVE");
+        if (v.includes("anjo")) return mostrar("O MENSAGEIRO CAIU");
+        if (v.includes("lua")) return mostrar("A PRISÃO OBSERVA");
+        if (v.includes("verbo")) return mostrar("E O VERBO SE CALOU");
+        if (v.includes("reino")) return mostrar("ELE SE APROXIMA");
+        if (v.includes("chiclete")) return mostrar("chicletiii!!");
     }
 });
 
-function falar(txt){
+function mostrar(txt){
     Resposta.innerText = txt;
     Resposta.style.opacity = 1;
-    setTimeout(()=>Resposta.style.opacity=0,2000);
+    setTimeout(()=>Resposta.style.opacity=0,3000);
 }
 </script>
 
 </body>
 </html>
-
