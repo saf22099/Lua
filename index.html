@@ -7,7 +7,6 @@
 <style>
 html, body {
     margin: 0;
-    padding: 0;
     width: 100%;
     height: 100%;
     background: black;
@@ -16,10 +15,9 @@ html, body {
     color: #cfcfcf;
 }
 
-.Ceu {
-    position: fixed;
-    inset: 0;
-}
+/* ===== PARTE 1 ===== */
+
+.Ceu { position: fixed; inset: 0; }
 
 .Estrelas {
     position: absolute;
@@ -42,27 +40,6 @@ html, body {
     opacity: 0.85;
 }
 
-.Estrela-Cadente {
-    position: absolute;
-    width: 2px;
-    height: 140px;
-    background: linear-gradient(to bottom, transparent, white);
-    opacity: 0.9;
-    transform: rotate(20deg);
-    animation: Cair 3.8s linear forwards;
-}
-
-@keyframes Cair {
-    from {
-        transform: translate(0, -200px) rotate(20deg);
-        opacity: 1;
-    }
-    to {
-        transform: translate(-500px, 900px) rotate(20deg);
-        opacity: 0;
-    }
-}
-
 .Lua {
     position: absolute;
     top: 50%;
@@ -70,6 +47,7 @@ html, body {
     width: 180px;
     height: 180px;
     transform: translate(-50%, -50%) scale(1);
+    transition: opacity 10s ease;
 }
 
 .Lua-Interior {
@@ -102,6 +80,61 @@ html, body {
     font-size: 26px;
     letter-spacing: 4px;
 }
+
+.Mensagem-Final {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 34px;
+    opacity: 0;
+    pointer-events: none; /* <<< TRAVA */
+    white-space: pre-line;
+    animation: glitch 0.25s infinite;
+}
+
+@keyframes glitch {
+    0% { transform: translate(0,0); }
+    25% { transform: translate(1px,-1px); }
+    50% { transform: translate(-1px,1px); }
+    75% { transform: translate(1px,1px); }
+}
+
+/* ===== PARTE 2 ===== */
+
+#Parte2 {
+    position: fixed;
+    inset: 0;
+    background: black;
+    display: none;
+}
+
+#Campo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #555;
+    outline: none;
+    color: #cfcfcf;
+    font-size: 28px;
+    width: 420px;
+    text-align: center;
+}
+
+#Resposta {
+    position: fixed;
+    bottom: 20%;
+    width: 100%;
+    text-align: center;
+    font-size: 26px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
 </style>
 </head>
 
@@ -109,53 +142,116 @@ html, body {
 
 <div class="Ceu" id="Ceu">
     <div class="Estrelas"></div>
-
-    <div class="Lua" id="Lua">
-        <div class="Lua-Interior"></div>
-    </div>
-
+    <div class="Lua" id="Lua"><div class="Lua-Interior"></div></div>
     <div class="Contador" id="Contador"></div>
 </div>
 
+<div class="Mensagem-Final" id="Final">
+O PRIMEIRO PASSO FOI FEITO
+
+ESTÁ CONSUMADO
+</div>
+
+<div id="Parte2">
+    <input id="Campo" autocomplete="off" autofocus>
+    <div id="Resposta"></div>
+</div>
+
 <script>
-const alvo = new Date("2026-01-14T17:00:00");
-const contador = document.getElementById("Contador");
-const lua = document.getElementById("Lua");
-const ceu = document.getElementById("Ceu");
+/* ===== ESTADO ===== */
+if (localStorage.getItem("parte2") === "true") {
+    Ceu.style.display = "none";
+    Final.style.display = "none";
+    Parte2.style.display = "block";
+}
 
+/* ===== TIMER ===== */
+const alvo = new Date("2026-01-14T16:45:00");
 let escala = 1;
+let terminou = false;
 
-function atualizar() {
-    const agora = new Date();
-    const diff = alvo - agora;
+setInterval(() => {
+    if (terminou) return;
 
-    const h = Math.max(0, Math.floor(diff / 1000 / 60 / 60));
-    const m = Math.max(0, Math.floor(diff / 1000 / 60) % 60);
-    const s = Math.max(0, Math.floor(diff / 1000) % 60);
+    const diff = alvo - new Date();
 
-    contador.textContent =
+    if (diff <= 0) {
+        terminou = true;
+
+        Lua.style.opacity = 0;
+        Final.style.opacity = 1;
+
+        /* >>> AGORA FICA CLICÁVEL <<< */
+        Final.style.pointerEvents = "auto";
+        Final.style.cursor = "pointer";
+
+        setInterval(() => {
+            const bugs = ["00:00:00","01:15","12:40","09:28","01:07"];
+            Contador.textContent = bugs[Math.floor(Math.random()*bugs.length)];
+        }, 700);
+
+        return;
+    }
+
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor(diff / 60000) % 60;
+    const s = Math.floor(diff / 1000) % 60;
+
+    Contador.textContent =
         String(h).padStart(2,"0") + ":" +
         String(m).padStart(2,"0") + ":" +
         String(s).padStart(2,"0");
 
     escala += 0.0004;
-    lua.style.transform = `translate(-50%, -50%) scale(${escala})`;
+    Lua.style.transform = `translate(-50%, -50%) scale(${escala})`;
+}, 1000);
+
+/* ===== CLIQUE FINAL ===== */
+Final.onclick = () => {
+    if (!terminou) return; // segurança extra
+
+    localStorage.setItem("parte2","true");
+    Ceu.style.display = "none";
+    Final.style.display = "none";
+    Parte2.style.display = "block";
+};
+
+/* ===== PARTE 2 INPUT ===== */
+let respondeu = false;
+
+Campo.addEventListener("keydown", e => {
+    if (e.key !== "Enter") return;
+
+    const v = Campo.value.toLowerCase().trim();
+    Campo.value = "";
+
+    if (respondeu) return;
+    respondeu = true;
+
+    if (v.includes("elohim")) falar("ELE OUVE");
+    else if (v.includes("anjo")) falar("O MENSAGEIRO CAIU");
+    else if (v.includes("lua")) falar("A PRISÃO OBSERVA");
+    else if (v.includes("verbo")) falar("E O VERBO SE CALOU");
+    else if (v.includes("reino")) falar("ELE SE APROXIMA");
+    else if (v.includes("chiclete")) falar("chicletiii!!");
+    else if (v === "poeta") {
+        Resposta.innerText =
+`Mande uma mensagem para mim.
+Diga:
+
+"Poeta é um criador"`;
+        Resposta.style.opacity = 1;
+        setTimeout(()=>Resposta.style.opacity=0,4000);
+    } else {
+        falar("...");
+    }
+});
+
+function falar(txt){
+    Resposta.innerText = txt;
+    Resposta.style.opacity = 1;
+    setTimeout(()=>Resposta.style.opacity=0,2000);
 }
-
-function estrelaCadente() {
-    const e = document.createElement("div");
-    e.className = "Estrela-Cadente";
-    e.style.left = Math.random() * 100 + "%";
-    e.style.top = "-200px";
-    ceu.appendChild(e);
-    setTimeout(() => e.remove(), 4500);
-}
-
-setInterval(atualizar, 1000);
-
-setInterval(() => {
-    if (Math.random() < 0.45) estrelaCadente();
-}, 14000);
 </script>
 
 </body>
