@@ -64,9 +64,18 @@ html, body {
     position: fixed;
     width: 140px;
     height: 140px;
-    opacity: 0.45;
+    opacity: 0.4;
     pointer-events: none;
     z-index: 2;
+}
+
+.cross {
+    position: fixed;
+    font-size: 72px;
+    color: white;
+    opacity: 0.45;
+    pointer-events: none;
+    z-index: 3;
 }
 
 .glitch {
@@ -151,6 +160,7 @@ setInterval(() => {
 setInterval(() => {
     if (ended) return;
     spawnGhostMoon();
+    if (Math.random() < 0.4) spawnCross();
 }, 9000);
 
 setInterval(() => {
@@ -190,6 +200,16 @@ function spawnGhostMoon() {
     g.style.transform = `scale(${Math.random() * 1.8 + 0.3})`;
     document.body.appendChild(g);
     setTimeout(() => g.remove(), 250);
+}
+
+function spawnCross() {
+    const c = document.createElement("div");
+    c.className = "cross";
+    c.textContent = "✝";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.top = Math.random() * 100 + "vh";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 180);
 }
 
 function startFinal() {
