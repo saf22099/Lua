@@ -23,17 +23,18 @@ html, body {
     text-align: center;
     font-size: 26px;
     letter-spacing: 2px;
+    opacity: 0;
+    transition: opacity 2s;
     z-index: 10;
 }
 
 .moon {
     position: fixed;
-    width: 200px;
-    height: 200px;
+    width: 220px;
+    height: 220px;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
-    transition: transform 60s linear;
+    transform: translate(-50%, -50%) scale(1);
     z-index: 1;
 }
 
@@ -57,6 +58,15 @@ html, body {
 @keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+}
+
+.ghost-moon {
+    position: fixed;
+    width: 140px;
+    height: 140px;
+    opacity: 0.45;
+    pointer-events: none;
+    z-index: 2;
 }
 
 .glitch {
@@ -87,17 +97,6 @@ html, body {
     15% { opacity: 1; }
     85% { opacity: 1; }
     100% { opacity: 0; }
-}
-
-.cross {
-    position: fixed;
-    font-size: 80px;
-    color: white;
-    opacity: 0.6;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 20;
 }
 
 .end {
@@ -134,20 +133,25 @@ let ended = false;
 const phrases = [
     "Deus é o poeta, que atua em suas próprias criações",
     "O demônio é mais diabólico quando é respeitável.",
-    "Deus é o perfeito poeta, que atua nas suas próprias criações.",
     "A verdade nunca fere quem a diz.",
     "A ignorância não é inocência, mas pecado.",
-    "O que enobrece o homem não é o seu ato mas o seu desejo.",
-    "O homem não pode obter verdade mais verdadeira do que aquela que vem da música.",
-    "Para fazer boas coisas no mundo, primeiro você precisa saber quem é você.",
     "Quando a luta começa dentro de si mesmo, o homem vale alguma coisa."
 ];
 
+setTimeout(() => {
+    countdownEl.style.opacity = "1";
+}, 2000);
+
 setInterval(() => {
     if (ended) return;
-    scale += 0.01;
+    scale += 0.008;
     moon.style.transform = `translate(-50%, -50%) scale(${scale})`;
 }, 3000);
+
+setInterval(() => {
+    if (ended) return;
+    spawnGhostMoon();
+}, 9000);
 
 setInterval(() => {
     if (ended) return;
@@ -156,11 +160,10 @@ setInterval(() => {
     p.textContent = phrases[Math.floor(Math.random() * phrases.length)];
     document.body.appendChild(p);
     setTimeout(() => p.remove(), 6000);
-}, 12000);
+}, 14000);
 
 function updateCountdown() {
-    const now = Date.now();
-    const diff = target - now;
+    const diff = target - Date.now();
 
     if (diff <= 0 && !ended) {
         ended = true;
@@ -179,52 +182,28 @@ function updateCountdown() {
 setInterval(updateCountdown, 1000);
 updateCountdown();
 
+function spawnGhostMoon() {
+    const g = moon.cloneNode(true);
+    g.classList.add("ghost-moon");
+    g.style.left = Math.random() * 100 + "vw";
+    g.style.top = Math.random() * 100 + "vh";
+    g.style.transform = `scale(${Math.random() * 1.8 + 0.3})`;
+    document.body.appendChild(g);
+    setTimeout(() => g.remove(), 250);
+}
+
 function startFinal() {
     countdownEl.textContent = "01 : 15";
     document.body.classList.add("glitch");
 
-    const chaos = setInterval(() => {
-        spawnMoon();
-        if (Math.random() < 0.25) spawnCross();
-    }, 200);
-
     setTimeout(() => {
-        clearInterval(chaos);
-        endScene();
+        document.body.innerHTML = "";
+        const end = document.createElement("div");
+        end.className = "end";
+        end.textContent = "O Primeiro passo... Está consumado";
+        document.body.appendChild(end);
+        setTimeout(() => end.style.opacity = "1", 1000);
     }, 7000);
-}
-
-function spawnMoon() {
-    const m = moon.cloneNode(true);
-    m.style.left = Math.random() * 100 + "vw";
-    m.style.top = Math.random() * 100 + "vh";
-    m.style.transform = `scale(${Math.random() * 2 + 0.4})`;
-    m.style.opacity = "0.4";
-    document.body.appendChild(m);
-    setTimeout(() => m.remove(), 300);
-}
-
-function spawnCross() {
-    const c = document.createElement("div");
-    c.className = "cross";
-    c.textContent = "✝";
-    document.body.appendChild(c);
-    setTimeout(() => c.remove(), 120);
-}
-
-function endScene() {
-    document.body.classList.remove("glitch");
-    document.body.innerHTML = "";
-    document.body.style.background = "black";
-
-    const end = document.createElement("div");
-    end.className = "end";
-    end.textContent = "O Primeiro passo... Está consumado";
-    document.body.appendChild(end);
-
-    setTimeout(() => {
-        end.style.opacity = "1";
-    }, 1000);
 }
 </script>
 
