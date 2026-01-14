@@ -16,29 +16,63 @@ html, body {
     color: #cfcfcf;
 }
 
-#countdown {
+.Ceu {
     position: fixed;
-    bottom: 40px;
-    width: 100%;
-    text-align: center;
-    font-size: 26px;
-    letter-spacing: 2px;
-    opacity: 0;
-    transition: opacity 2s;
-    z-index: 10;
+    inset: 0;
 }
 
-.moon {
-    position: fixed;
-    width: 220px;
-    height: 220px;
-    left: 50%;
+.Estrelas {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(1px 1px at 5% 15%, white, transparent),
+        radial-gradient(1px 1px at 12% 40%, white, transparent),
+        radial-gradient(1px 1px at 18% 80%, white, transparent),
+        radial-gradient(1px 1px at 25% 25%, white, transparent),
+        radial-gradient(2px 2px at 30% 60%, white, transparent),
+        radial-gradient(1px 1px at 38% 10%, white, transparent),
+        radial-gradient(1px 1px at 45% 75%, white, transparent),
+        radial-gradient(2px 2px at 52% 45%, white, transparent),
+        radial-gradient(1px 1px at 60% 20%, white, transparent),
+        radial-gradient(1px 1px at 68% 85%, white, transparent),
+        radial-gradient(2px 2px at 75% 50%, white, transparent),
+        radial-gradient(1px 1px at 82% 30%, white, transparent),
+        radial-gradient(1px 1px at 90% 70%, white, transparent),
+        radial-gradient(2px 2px at 95% 15%, white, transparent);
+    opacity: 0.85;
+}
+
+.Estrela-Cadente {
+    position: absolute;
+    width: 2px;
+    height: 140px;
+    background: linear-gradient(to bottom, transparent, white);
+    opacity: 0.9;
+    transform: rotate(20deg);
+    animation: Cair 3.8s linear forwards;
+}
+
+@keyframes Cair {
+    from {
+        transform: translate(0, -200px) rotate(20deg);
+        opacity: 1;
+    }
+    to {
+        transform: translate(-500px, 900px) rotate(20deg);
+        opacity: 0;
+    }
+}
+
+.Lua {
+    position: absolute;
     top: 50%;
+    left: 50%;
+    width: 180px;
+    height: 180px;
     transform: translate(-50%, -50%) scale(1);
-    z-index: 1;
 }
 
-.moon-inner {
+.Lua-Interior {
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -49,182 +83,79 @@ html, body {
         radial-gradient(circle at 70% 70%, rgba(0,0,0,0.22) 8%, transparent 9%),
         radial-gradient(circle at 35% 35%, #ffffff, #dcdcdc 45%, #bdbdbd 70%, #9e9e9e 100%);
     box-shadow:
-        0 0 40px rgba(255,255,255,0.25),
-        inset -20px -20px 40px rgba(0,0,0,0.45),
-        inset 15px 15px 20px rgba(255,255,255,0.15);
-    animation: spin 90s linear infinite;
+        0 0 35px rgba(255,255,255,0.25),
+        inset -14px -14px 30px rgba(0,0,0,0.45),
+        inset 10px 10px 18px rgba(255,255,255,0.15);
+    animation: Girar 60s linear infinite;
 }
 
-@keyframes spin {
+@keyframes Girar {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
 
-.ghost-moon {
-    position: fixed;
-    width: 140px;
-    height: 140px;
-    opacity: 0.4;
-    pointer-events: none;
-    z-index: 2;
-}
-
-.cross {
-    position: fixed;
-    font-size: 72px;
-    color: white;
-    opacity: 0.45;
-    pointer-events: none;
-    z-index: 3;
-}
-
-.glitch {
-    animation: glitch 0.12s infinite;
-}
-
-@keyframes glitch {
-    0% { transform: translate(0); }
-    25% { transform: translate(-2px, 2px); }
-    50% { transform: translate(2px, -2px); }
-    75% { transform: translate(-1px, 1px); }
-    100% { transform: translate(0); }
-}
-
-.phrase {
-    position: fixed;
-    top: 40%;
+.Contador {
+    position: absolute;
+    bottom: 8%;
     width: 100%;
     text-align: center;
-    font-size: 22px;
-    opacity: 0;
-    animation: fade 6s forwards;
-    z-index: 5;
-}
-
-@keyframes fade {
-    0% { opacity: 0; }
-    15% { opacity: 1; }
-    85% { opacity: 1; }
-    100% { opacity: 0; }
-}
-
-.end {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    opacity: 0;
-    transition: opacity 4s;
+    font-size: 26px;
+    letter-spacing: 4px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="moon" id="mainMoon">
-    <div class="moon-inner"></div>
+<div class="Ceu" id="Ceu">
+    <div class="Estrelas"></div>
+
+    <div class="Lua" id="Lua">
+        <div class="Lua-Interior"></div>
+    </div>
+
+    <div class="Contador" id="Contador"></div>
 </div>
 
-<div id="countdown"></div>
-
 <script>
-const target = new Date("2026-01-14T17:00:00").getTime();
-const countdownEl = document.getElementById("countdown");
-const moon = document.getElementById("mainMoon");
+const alvo = new Date("2026-01-14T17:00:00");
+const contador = document.getElementById("Contador");
+const lua = document.getElementById("Lua");
+const ceu = document.getElementById("Ceu");
 
-let scale = 1;
-let ended = false;
+let escala = 1;
 
-const phrases = [
-    "Deus é o poeta, que atua em suas próprias criações",
-    "O demônio é mais diabólico quando é respeitável.",
-    "A verdade nunca fere quem a diz.",
-    "A ignorância não é inocência, mas pecado.",
-    "Quando a luta começa dentro de si mesmo, o homem vale alguma coisa."
-];
+function atualizar() {
+    const agora = new Date();
+    const diff = alvo - agora;
 
-setTimeout(() => {
-    countdownEl.style.opacity = "1";
-}, 2000);
+    const h = Math.max(0, Math.floor(diff / 1000 / 60 / 60));
+    const m = Math.max(0, Math.floor(diff / 1000 / 60) % 60);
+    const s = Math.max(0, Math.floor(diff / 1000) % 60);
+
+    contador.textContent =
+        String(h).padStart(2,"0") + ":" +
+        String(m).padStart(2,"0") + ":" +
+        String(s).padStart(2,"0");
+
+    escala += 0.0004;
+    lua.style.transform = `translate(-50%, -50%) scale(${escala})`;
+}
+
+function estrelaCadente() {
+    const e = document.createElement("div");
+    e.className = "Estrela-Cadente";
+    e.style.left = Math.random() * 100 + "%";
+    e.style.top = "-200px";
+    ceu.appendChild(e);
+    setTimeout(() => e.remove(), 4500);
+}
+
+setInterval(atualizar, 1000);
 
 setInterval(() => {
-    if (ended) return;
-    scale += 0.008;
-    moon.style.transform = `translate(-50%, -50%) scale(${scale})`;
-}, 3000);
-
-setInterval(() => {
-    if (ended) return;
-    spawnGhostMoon();
-    if (Math.random() < 0.4) spawnCross();
-}, 9000);
-
-setInterval(() => {
-    if (ended) return;
-    const p = document.createElement("div");
-    p.className = "phrase";
-    p.textContent = phrases[Math.floor(Math.random() * phrases.length)];
-    document.body.appendChild(p);
-    setTimeout(() => p.remove(), 6000);
+    if (Math.random() < 0.45) estrelaCadente();
 }, 14000);
-
-function updateCountdown() {
-    const diff = target - Date.now();
-
-    if (diff <= 0 && !ended) {
-        ended = true;
-        startFinal();
-        return;
-    }
-
-    const h = Math.floor(diff / 1000 / 60 / 60);
-    const m = Math.floor((diff / 1000 / 60) % 60);
-    const s = Math.floor((diff / 1000) % 60);
-
-    countdownEl.textContent =
-        `${String(h).padStart(2,"0")} : ${String(m).padStart(2,"0")} : ${String(s).padStart(2,"0")}`;
-}
-
-setInterval(updateCountdown, 1000);
-updateCountdown();
-
-function spawnGhostMoon() {
-    const g = moon.cloneNode(true);
-    g.classList.add("ghost-moon");
-    g.style.left = Math.random() * 100 + "vw";
-    g.style.top = Math.random() * 100 + "vh";
-    g.style.transform = `scale(${Math.random() * 1.8 + 0.3})`;
-    document.body.appendChild(g);
-    setTimeout(() => g.remove(), 250);
-}
-
-function spawnCross() {
-    const c = document.createElement("div");
-    c.className = "cross";
-    c.textContent = "✝";
-    c.style.left = Math.random() * 100 + "vw";
-    c.style.top = Math.random() * 100 + "vh";
-    document.body.appendChild(c);
-    setTimeout(() => c.remove(), 180);
-}
-
-function startFinal() {
-    countdownEl.textContent = "01 : 15";
-    document.body.classList.add("glitch");
-
-    setTimeout(() => {
-        document.body.innerHTML = "";
-        const end = document.createElement("div");
-        end.className = "end";
-        end.textContent = "O Primeiro passo... Está consumado";
-        document.body.appendChild(end);
-        setTimeout(() => end.style.opacity = "1", 1000);
-    }, 7000);
-}
 </script>
 
 </body>
