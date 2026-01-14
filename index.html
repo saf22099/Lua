@@ -2,31 +2,39 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>⸸</title>
 
 <style>
-body {
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
     background: black;
-    color: #cfcfcf;
-    font-family: "Times New Roman", serif;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     overflow: hidden;
+    font-family: "Times New Roman", serif;
+    color: #cfcfcf;
 }
 
-.container {
+#countdown {
+    position: fixed;
+    bottom: 40px;
+    width: 100%;
     text-align: center;
-    position: relative;
+    font-size: 26px;
+    letter-spacing: 2px;
+    z-index: 10;
 }
 
 .moon {
-    width: 150px;
-    height: 150px;
-    margin: 0 auto 30px;
-    transition: transform 8s linear;
+    position: fixed;
+    width: 200px;
+    height: 200px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 60s linear;
+    z-index: 1;
 }
 
 .moon-inner {
@@ -40,10 +48,10 @@ body {
         radial-gradient(circle at 70% 70%, rgba(0,0,0,0.22) 8%, transparent 9%),
         radial-gradient(circle at 35% 35%, #ffffff, #dcdcdc 45%, #bdbdbd 70%, #9e9e9e 100%);
     box-shadow:
-        0 0 25px rgba(255,255,255,0.25),
-        inset -14px -14px 30px rgba(0,0,0,0.45),
-        inset 10px 10px 18px rgba(255,255,255,0.15);
-    animation: spin 40s linear infinite;
+        0 0 40px rgba(255,255,255,0.25),
+        inset -20px -20px 40px rgba(0,0,0,0.45),
+        inset 15px 15px 20px rgba(255,255,255,0.15);
+    animation: spin 90s linear infinite;
 }
 
 @keyframes spin {
@@ -51,51 +59,8 @@ body {
     to { transform: rotate(360deg); }
 }
 
-input {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid white;
-    color: white;
-    font-size: 18px;
-    text-align: center;
-    outline: none;
-    padding: 8px;
-    width: 260px;
-}
-
-.hint {
-    font-size: 12px;
-    opacity: 0.7;
-    margin-top: 12px;
-}
-
-.message {
-    position: absolute;
-    top: 235px;
-    width: 100%;
-    font-size: 18px;
-    line-height: 1.6;
-    letter-spacing: 1px;
-    color: #9fa8b5;
-    opacity: 0;
-    animation: fadeInOut 5s forwards;
-    pointer-events: none;
-}
-
-.video-link {
-    display: none;
-    margin-top: 25px;
-    font-size: 18px;
-}
-
-.video-link a {
-    color: white;
-    text-decoration: none;
-    border-bottom: 1px solid white;
-}
-
 .glitch {
-    animation: glitch 0.15s infinite;
+    animation: glitch 0.12s infinite;
 }
 
 @keyframes glitch {
@@ -106,163 +71,160 @@ input {
     100% { transform: translate(0); }
 }
 
-@keyframes fadeInOut {
+.phrase {
+    position: fixed;
+    top: 40%;
+    width: 100%;
+    text-align: center;
+    font-size: 22px;
+    opacity: 0;
+    animation: fade 6s forwards;
+    z-index: 5;
+}
+
+@keyframes fade {
     0% { opacity: 0; }
-    20% { opacity: 1; }
-    80% { opacity: 1; }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
     100% { opacity: 0; }
+}
+
+.cross {
+    position: fixed;
+    font-size: 80px;
+    color: white;
+    opacity: 0.6;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+}
+
+.end {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    opacity: 0;
+    transition: opacity 4s;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container" id="container">
-    <div class="moon" id="moon">
-        <div class="moon-inner"></div>
-    </div>
-
-    <input id="password" type="text" autocomplete="off" placeholder="Digite a palavra">
-
-    <div class="hint" id="hint">
-        O vídeo fala o maior medo e preconceito.
-    </div>
-
-    <div class="video-link" id="videoLink">
-        <a href="https://www.youtube.com/watch?v=1DLpDiw-tgs" target="_blank">
-            ABRIR O VÍDEO
-        </a>
-    </div>
+<div class="moon" id="mainMoon">
+    <div class="moon-inner"></div>
 </div>
 
-<script>
-if (localStorage.getItem("elohim_lock")) {
-    document.body.innerHTML = "";
-    document.body.classList.add("glitch");
-    setInterval(() => {
-        document.body.classList.toggle("glitch");
-    }, 200);
-    throw new Error("LOCKED");
-}
+<div id="countdown"></div>
 
-const input = document.getElementById("password");
-const container = document.getElementById("container");
-const moon = document.getElementById("moon");
-const hint = document.getElementById("hint");
-const videoLink = document.getElementById("videoLink");
+<script>
+const target = new Date("2026-01-14T17:00:00").getTime();
+const countdownEl = document.getElementById("countdown");
+const moon = document.getElementById("mainMoon");
 
 let scale = 1;
-let locked = false;
+let ended = false;
 
-input.focus();
+const phrases = [
+    "Deus é o poeta, que atua em suas próprias criações",
+    "O demônio é mais diabólico quando é respeitável.",
+    "Deus é o perfeito poeta, que atua nas suas próprias criações.",
+    "A verdade nunca fere quem a diz.",
+    "A ignorância não é inocência, mas pecado.",
+    "O que enobrece o homem não é o seu ato mas o seu desejo.",
+    "O homem não pode obter verdade mais verdadeira do que aquela que vem da música.",
+    "Para fazer boas coisas no mundo, primeiro você precisa saber quem é você.",
+    "Quando a luta começa dentro de si mesmo, o homem vale alguma coisa."
+];
 
-input.addEventListener("keydown", e => {
-    if (e.key !== "Enter" || locked) return;
+setInterval(() => {
+    if (ended) return;
+    scale += 0.01;
+    moon.style.transform = `translate(-50%, -50%) scale(${scale})`;
+}, 3000);
 
-    const value = input.value.trim().toLowerCase();
+setInterval(() => {
+    if (ended) return;
+    const p = document.createElement("div");
+    p.className = "phrase";
+    p.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 6000);
+}, 12000);
 
-    if (value === "elohim") {
-        localStorage.setItem("elohim_lock", "1");
-        container.classList.add("glitch");
-        setTimeout(() => location.reload(), 800);
+function updateCountdown() {
+    const now = Date.now();
+    const diff = target - now;
+
+    if (diff <= 0 && !ended) {
+        ended = true;
+        startFinal();
         return;
     }
 
-    if (value === "אֱלוֹהִים" && !localStorage.getItem("egg_hebrew")) {
-        localStorage.setItem("egg_hebrew", "1");
-        triggerEgg("Olhe para o céu escuro...");
-        return;
-    }
+    const h = Math.floor(diff / 1000 / 60 / 60);
+    const m = Math.floor((diff / 1000 / 60) % 60);
+    const s = Math.floor((diff / 1000) % 60);
 
-    if (value === "lua" && !localStorage.getItem("egg_lua")) {
-        localStorage.setItem("egg_lua", "1");
-        triggerEgg("Estou aqui.");
-        return;
-    }
-
-    if (value === "el" && !localStorage.getItem("egg_el")) {
-        localStorage.setItem("egg_el", "1");
-        triggerEgg("Eu sei...");
-        return;
-    }
-
-    if (value === "enxovia" && !localStorage.getItem("egg_enxovia")) {
-        localStorage.setItem("egg_enxovia", "1");
-        triggerEgg("A Lua é bela, não?");
-        return;
-    }
-
-    if ((value === "princípio" || value === "principio") && !localStorage.getItem("principio_done")) {
-        localStorage.setItem("principio_done", "1");
-        startPrincipio();
-        return;
-    }
-
-    if (value === "xenofobia") {
-        locked = true;
-        container.classList.add("glitch");
-        setTimeout(() => {
-            moon.remove();
-            input.remove();
-            hint.remove();
-            videoLink.style.display = "block";
-            container.classList.remove("glitch");
-        }, 1000);
-        return;
-    }
-
-    triggerGlitchReset();
-});
-
-function showMessage(text) {
-    const msg = document.createElement("div");
-    msg.className = "message";
-    msg.innerHTML = text.replace(/\n/g, "<br>");
-    container.appendChild(msg);
-    setTimeout(() => msg.remove(), 5000);
+    countdownEl.textContent =
+        `${String(h).padStart(2,"0")} : ${String(m).padStart(2,"0")} : ${String(s).padStart(2,"0")}`;
 }
 
-function triggerEgg(text) {
-    locked = true;
-    showMessage(text);
-    setTimeout(triggerGlitchReset, 5000);
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+function startFinal() {
+    countdownEl.textContent = "01 : 15";
+    document.body.classList.add("glitch");
+
+    const chaos = setInterval(() => {
+        spawnMoon();
+        if (Math.random() < 0.25) spawnCross();
+    }, 200);
+
+    setTimeout(() => {
+        clearInterval(chaos);
+        endScene();
+    }, 7000);
 }
 
-function triggerGlitchReset() {
-    locked = true;
-    container.classList.add("glitch");
-    setTimeout(() => location.reload(), 1200);
+function spawnMoon() {
+    const m = moon.cloneNode(true);
+    m.style.left = Math.random() * 100 + "vw";
+    m.style.top = Math.random() * 100 + "vh";
+    m.style.transform = `scale(${Math.random() * 2 + 0.4})`;
+    m.style.opacity = "0.4";
+    document.body.appendChild(m);
+    setTimeout(() => m.remove(), 300);
 }
 
-function growMoon() {
-    scale += 0.4;
-    moon.style.transform = `scale(${scale})`;
+function spawnCross() {
+    const c = document.createElement("div");
+    c.className = "cross";
+    c.textContent = "✝";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 120);
 }
 
-function startPrincipio() {
-    locked = true;
-    input.remove();
-    hint.remove();
+function endScene() {
+    document.body.classList.remove("glitch");
+    document.body.innerHTML = "";
+    document.body.style.background = "black";
 
-    const textos = [
-        `Não confies na luz absoluta, pois ela cega; nem na escuridão total, pois ela devora.<br>Ouve os sinais quando o céu parecer mais próximo do que deveria.`,
-        `Reconhece que a humanidade não foi escolhida, mas permaneceu.<br>Não pergunte onde Ele está, pois olhar demais para cima quebra o pescoço do fiel.`,
-        `O que dorme acima desperta quando o ciclo se completa.`,
-        `Honra aquilo que observa em silêncio, pois o que nunca fala é o que nunca mente.<br>Não blasfemes contra o céu noturno, pois nele repousa o peso do mundo.`
-    ];
+    const end = document.createElement("div");
+    end.className = "end";
+    end.textContent = "O Primeiro passo... Está consumado";
+    document.body.appendChild(end);
 
-    let i = 0;
-
-    const interval = setInterval(() => {
-        if (i >= textos.length) {
-            clearInterval(interval);
-            triggerGlitchReset();
-            return;
-        }
-        showMessage(textos[i]);
-        growMoon();
-        i++;
-    }, 5000);
+    setTimeout(() => {
+        end.style.opacity = "1";
+    }, 1000);
 }
 </script>
 
