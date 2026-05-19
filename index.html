@@ -25,6 +25,7 @@
             position: relative;
         }
 
+        /* Fundo Vivo com Estrelas Pulsantes */
         .sky {
             position: absolute;
             top: 0;
@@ -69,6 +70,7 @@
             text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
         }
 
+        /* Lua Texturizada e Viva */
         .moon-container {
             position: relative;
             width: 190px;
@@ -89,6 +91,7 @@
             animation: moonSpin 80s linear infinite;
         }
 
+        /* 5 Crateras Orgânicas formando a Cruz */
         .crater {
             position: absolute;
             background: rgba(10, 10, 12, 0.95);
@@ -196,6 +199,7 @@
             padding-left: 1.2rem;
         }
 
+        /* TELA DE EVENTO: ELOHIM (PAI GIGANTE) */
         .father-overlay {
             position: fixed;
             top: 0;
@@ -270,7 +274,7 @@
         <div class="chat-box">
             <div class="messages-area" id="msgArea">
                 <div class="msg-row apostle-a">
-                    "Ah, um visitante curioso... O que desejas saber? Pergunte, e eu, um dos Apóstolo de Elohim, compartilharei os segredos que me foram concedidos."
+                    "Vossa carne pecadora pisa em ruas cobertas de pavor, mas vossas almas ainda pertencem ao Pai. O tempo racha. O fim chegará em trezentos e sessenta e cinco sóis. O que queres perguntar ao espírito antes do resgate?"
                 </div>
             </div>
             <div class="input-area">
@@ -280,6 +284,7 @@
         </div>
     </div>
 
+    <!-- Div oculta da Manifestação Divina -->
     <div class="father-overlay" id="fatherOverlay">
         <div class="father-text">Pai</div>
     </div>
@@ -371,7 +376,8 @@
             // Desativa elementos principais
             mainContainer.style.opacity = '0';
             skyBackground.style.opacity = '0';
-
+            
+            // Ativa o overlay gigante do PAI
             setTimeout(() => {
                 mainContainer.style.display = 'none';
                 skyBackground.style.display = 'none';
@@ -383,7 +389,7 @@
             const query = chatIn.value.trim();
             if (!query) return;
 
-           
+            // Transforma o texto para verificar o gatilho especial de Elohim imediatamente
             const cleanCheck = query.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             
             if (cleanCheck.includes('elohim')) {
@@ -392,7 +398,7 @@
                 setTimeout(() => {
                     triggerDivineManifestation();
                 }, 600);
-                return; /
+                return; // Corta a execução aqui para travar o site
             }
 
             addTextRow(query, 'user-q');
