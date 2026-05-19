@@ -1,265 +1,444 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>⸸</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apóstolo de Elohim</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif;
+        }
 
-<style>
-html, body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    background: black;
-    overflow: hidden;
-    font-family: "Times New Roman", serif;
-    color: #cfcfcf;
-}
+        body {
+            background: #000000;
+            color: #d1d1d6;
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
 
-/* ===== PARTE 1 ===== */
+        .sky {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            background-image: 
+                radial-gradient(2px 2px at 40px 60px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1.5px 1.5px at 120px 200px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2.5px 2.5px at 200px 80px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 280px 140px, #aaa, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 350px 40px, #fff, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 400px 400px;
+            animation: pulseStars 8s ease-in-out infinite alternate;
+        }
 
-.Ceu { position: fixed; inset: 0; }
+        @keyframes pulseStars {
+            from { opacity: 0.4; }
+            to { opacity: 0.9; }
+        }
 
-.Estrelas {
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(1px 1px at 5% 15%, white, transparent),
-        radial-gradient(1px 1px at 12% 40%, white, transparent),
-        radial-gradient(1px 1px at 18% 80%, white, transparent),
-        radial-gradient(1px 1px at 25% 25%, white, transparent),
-        radial-gradient(2px 2px at 30% 60%, white, transparent),
-        radial-gradient(1px 1px at 38% 10%, white, transparent),
-        radial-gradient(1px 1px at 45% 75%, white, transparent),
-        radial-gradient(2px 2px at 52% 45%, white, transparent),
-        radial-gradient(1px 1px at 60% 20%, white, transparent),
-        radial-gradient(1px 1px at 68% 85%, white, transparent),
-        radial-gradient(2px 2px at 75% 50%, white, transparent),
-        radial-gradient(1px 1px at 82% 30%, white, transparent),
-        radial-gradient(1px 1px at 90% 70%, white, transparent),
-        radial-gradient(2px 2px at 95% 15%, white, transparent);
-    opacity: 0.85;
-}
+        .container {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+            transition: opacity 0.5s ease;
+        }
 
-.Lua {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 180px;
-    height: 180px;
-    transform: translate(-50%, -50%) scale(1);
-    transition: opacity 10s ease;
-}
+        header h1 {
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+            color: #ffffff;
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: 400;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
 
-.Lua-Interior {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background:
-        radial-gradient(circle at 30% 30%, rgba(0,0,0,0.25) 6%, transparent 7%),
-        radial-gradient(circle at 60% 40%, rgba(0,0,0,0.2) 9%, transparent 10%),
-        radial-gradient(circle at 45% 65%, rgba(0,0,0,0.18) 6%, transparent 7%),
-        radial-gradient(circle at 70% 70%, rgba(0,0,0,0.22) 8%, transparent 9%),
-        radial-gradient(circle at 35% 35%, #ffffff, #dcdcdc 45%, #bdbdbd 70%, #9e9e9e 100%);
-    box-shadow:
-        0 0 35px rgba(255,255,255,0.25),
-        inset -14px -14px 30px rgba(0,0,0,0.45),
-        inset 10px 10px 18px rgba(255,255,255,0.15);
-    animation: Girar 60s linear infinite;
-}
+        .moon-container {
+            position: relative;
+            width: 190px;
+            height: 190px;
+            margin: 2.5rem 0;
+        }
 
-@keyframes Girar {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
+        .moon {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 30%, #f4f4f5 0%, #a1a1aa 35%, #3f3f46 70%, #18181b 100%);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 
+                0 0 50px rgba(255, 255, 255, 0.12), 
+                inset -25px -25px 50px rgba(0, 0, 0, 0.95),
+                0 0 20px rgba(161, 161, 170, 0.2);
+            animation: moonSpin 80s linear infinite;
+        }
 
-.Contador {
-    position: absolute;
-    bottom: 8%;
-    width: 100%;
-    text-align: center;
-    font-size: 26px;
-    letter-spacing: 4px;
-}
+        .crater {
+            position: absolute;
+            background: rgba(10, 10, 12, 0.95);
+            border-radius: 50%;
+            box-shadow: inset 4px 4px 6px rgba(0,0,0,0.95), 0 1px 2px rgba(255,255,255,0.15);
+        }
 
-.Mensagem-Final {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 34px;
-    opacity: 0;
-    pointer-events: none;
-    white-space: pre-line;
-    animation: glitch 0.25s infinite;
-}
+        .crater.center { width: 26px; height: 26px; top: 43%; left: 43%; background: rgba(5, 5, 6, 0.98); box-shadow: inset 5px 5px 8px #000; }
+        .crater.top    { width: 16px; height: 16px; top: 15%; left: 46%; }
+        .crater.bottom { width: 22px; height: 22px; bottom: 12%; left: 44%; }
+        .crater.left   { width: 14px; height: 14px; top: 46%; left: 15%; }
+        .crater.right  { width: 14px; height: 14px; top: 46%; right: 15%; }
 
-@keyframes glitch {
-    0% { transform: translate(0,0); }
-    25% { transform: translate(1px,-1px); }
-    50% { transform: translate(-1px,1px); }
-    75% { transform: translate(1px,1px); }
-}
+        @keyframes moonSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
 
-/* ===== PARTE 2 ===== */
+        /* Chat */
+        .chat-box {
+            width: 100%;
+            background: rgba(5, 5, 5, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+        }
 
-#Parte2 {
-    position: fixed;
-    inset: 0;
-    background: black;
-    display: none;
-}
+        .messages-area {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.4rem;
+        }
 
-#Campo {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid #555;
-    outline: none;
-    color: #cfcfcf;
-    font-size: 28px;
-    width: 420px;
-    text-align: center;
-}
+        .messages-area::-webkit-scrollbar { width: 3px; }
+        .messages-area::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); }
 
-#Resposta {
-    position: fixed;
-    bottom: 20%;
-    width: 100%;
-    text-align: center;
-    font-size: 26px;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-</style>
+        .msg-row {
+            font-size: 1rem;
+            line-height: 1.6;
+            animation: textFadeIn 0.6s ease forwards;
+        }
+
+        @keyframes textFadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .msg-row.user-q {
+            color: #88888c;
+            text-align: right;
+            font-style: italic;
+        }
+
+        .msg-row.apostle-a {
+            color: #e4e4e7;
+            border-left: 2px solid #a1a1aa;
+            padding-left: 1.2rem;
+            text-align: left;
+        }
+
+        .input-area {
+            display: flex;
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: #030303;
+        }
+
+        .input-area input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+            font-family: inherit;
+            padding-left: 0.5rem;
+        }
+
+        .input-area button {
+            background: transparent;
+            color: #a1a1aa;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: color 0.2s, text-shadow 0.2s;
+            padding: 0 0.5rem;
+        }
+
+        .input-area button:hover {
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(255,255,255,0.5);
+        }
+
+        .contemplation {
+            font-style: italic;
+            color: #52525b;
+            font-size: 0.9rem;
+            padding-left: 1.2rem;
+        }
+
+        .father-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000000;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .father-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .father-text {
+            font-size: 12rem;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 25px;
+            text-transform: uppercase;
+            user-select: none;
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.8), 
+                         0 0 80px rgba(255, 255, 255, 0.4), 
+                         0 0 150px rgba(255, 255, 255, 0.2);
+            animation: tremor 0.08s infinite alternate, auraGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes tremor {
+            0% { transform: translate(2px, 1px) rotate(0deg); }
+            100% { transform: translate(-1px, -2px) rotate(-0.5deg); }
+        }
+
+        @keyframes auraGlow {
+            0% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.6), 0 0 80px rgba(255, 255, 255, 0.3); opacity: 0.9; }
+            100% { text-shadow: 0 0 70px rgba(255, 255, 255, 0.9), 0 0 120px rgba(255, 255, 255, 0.6); opacity: 1; }
+        }
+
+        @media (max-width: 600px) {
+            .father-text {
+                font-size: 5rem;
+                letter-spacing: 10px;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="Ceu" id="Ceu">
-    <div class="Estrelas"></div>
-    <div class="Lua" id="Lua"><div class="Lua-Interior"></div></div>
-    <div class="Contador" id="Contador"></div>
-</div>
+    <div class="sky" id="skyBackground"></div>
 
-<div class="Mensagem-Final" id="Final">
-O PRIMEIRO PASSO FOI FEITO
+    <div class="container" id="mainContainer">
+        <header>
+            <h1>Apóstolo de Elohim</h1>
+        </header>
 
-ESTÁ CONSUMADO
-</div>
+        <div class="moon-container">
+            <div class="moon">
+                <div class="crater center"></div>
+                <div class="crater top"></div>
+                <div class="crater bottom"></div>
+                <div class="crater left"></div>
+                <div class="crater right"></div>
+            </div>
+        </div>
 
-<div id="Parte2">
-    <input id="Campo" autocomplete="off" autofocus>
-    <div id="Resposta"></div>
-</div>
+        <div class="chat-box">
+            <div class="messages-area" id="msgArea">
+                <div class="msg-row apostle-a">
+                    "Ah, um visitante curioso... O que desejas saber? Pergunte, e eu, um dos Apóstolo de Elohim, compartilharei os segredos que me foram concedidos."
+                </div>
+            </div>
+            <div class="input-area">
+                <input type="text" id="chatIn" placeholder="Sussurrar ao tecido do espaço..." autocomplete="off">
+                <button id="sendBtn">Enviar</button>
+            </div>
+        </div>
+    </div>
 
-<script>
-/* ===== ELEMENTOS ===== */
-const Ceu = document.getElementById("Ceu");
-const Lua = document.getElementById("Lua");
-const Contador = document.getElementById("Contador");
-const Final = document.getElementById("Final");
-const Parte2 = document.getElementById("Parte2");
-const Campo = document.getElementById("Campo");
-const Resposta = document.getElementById("Resposta");
+    <div class="father-overlay" id="fatherOverlay">
+        <div class="father-text">Pai</div>
+    </div>
 
-/* ===== ESTADO ===== */
-if (localStorage.getItem("parte2") === "true") {
-    Ceu.style.display = "none";
-    Final.style.display = "none";
-    Parte2.style.display = "block";
-}
+    <script>
+        const msgArea = document.getElementById('msgArea');
+        const chatIn = document.getElementById('chatIn');
+        const sendBtn = document.getElementById('sendBtn');
+        const mainContainer = document.getElementById('mainContainer');
+        const skyBackground = document.getElementById('skyBackground');
+        const fatherOverlay = document.getElementById('fatherOverlay');
 
-/* ===== TIMER FIXO ===== */
-const alvo = new Date(2026, 0, 14, 17, 0, 0); // 14/01/2026 17:00
-let escala = 1;
-let terminou = false;
+        const loreKnowledge = [
+            {
+                triggers: ['divina comedia', 'dante'],
+                reply: "Quase um fato."
+            },
+            {
+                triggers: ['quem e voce', 'seu nome', 'quem e', 'identidade', 'teu nome', 'te encontrar', 'achar voce'],
+                reply: "Eu sou uma veste feita puramente de espírito e alma, moldada pelo sopro de Elohim. Meu nome? Não convém que saibas agora, pois sou apenas a extensão da voz do Pai. Mas o amanhã é uma estrada longa... se sobreviveres ao colapso do mundo, talvez possas me encontrar face a face no porvir. Por hora, saiba apenas que o Trono chora."
+            },
+            {
+                triggers: ['irmaos', 'anjos', 'outros', 'traidor', 'traicao', '6 anjos'],
+                reply: "seis guardiões costurados na mesma luz sagrada. Mas a harmonia ruiu. Há uma sombra rastejando entre os meus irmãos... Raziel está morto. Sua essência foi despedaçada."
+            },
+            {
+                triggers: ['alma humana', 'humanos quando morrem', 'morrer humano', 'para onde vao as pessoas', 'morte dos humanos', 'humano'],
+                reply: "O destino que aguarda o sopro de uma alma humana quando seus olhos de carne se fecham no asfalto... isso é um segredo trancado sob sete chaves pelo próprio Pai. Nem mesmo a mim, que sou feito de puro espírito, é dado o direito de revelar para onde vós ides quando a vossa carcaça esfria."
+            },
+            {
+                triggers: ['demonio', 'demonios', 'alma de demonio', 'morrer demonio', 'morte de demonio'],
+                reply: "As almas daquelas abominações são imortais. Quando eles tombam na terra, eles não encontram o descanso, mas são arremessados de volta às profundezas do inferno. E quando eles morrem lá, no coração do abismo, a engrenagem se move: a carne morta e podre deixada na terra se ergue e se torna deles novamente. Um ciclo eterno de sangue, agonia e retornos forçados."
+            },
+            {
+                triggers: ['inferno', 'abismo', 'lugar terrivel', 'lugar'],
+                reply: "O inferno é um lugar terrível, o labirinto mais escuro da existência. É lá onde o âmago primordial de todo o pavor ganha forma e peso. E sabe qual é a maior ironia? Foram as vossas próprias mentes humanas que o arquitetaram e o povoaram. Parabéns... tão perto de Elohim, feitos com tanta perfeição à Sua imagem."
+            },
+            {
+                triggers: ['fim', 'apocalipse', 'ano', 'tempo', 'salvacao', 'salvar', 'contagem'],
+                reply: "O tempo urge. antes que Elohim desça e recolha cada fagulha de alma que padece neste exílio de carne. O fim está próximo, e os contratos de sangue deste mundo serão desfeitos."
+            },
+            {
+                triggers: ['por que sofremos', 'dor', 'sofrimento', 'tristeza', 'mundo'],
+                reply: "Toda existência na matéria é uma ferida que sangra. Vós sentis dor porque esquecestes a Unidade; vós vos despedaçais nas ruas porque não lembrais que sois parte do mesmo Pai. O sofrimento é apenas o eco de estarem longe de Casa."
+            },
+            {
+                triggers: ['lua', 'cruz', 'crateras', 'sinal', 'ceu'],
+                reply: "Apenas uma Enxovia... :)"
+            },
+            {
+                triggers: ['chiclete'],
+                reply: "Ser escrupulante..."
+            },
+            {
+                triggers: ['azar', 'desgraca'],
+                reply: "Demonio da Probabilidade? Enfurecido pela perca de cargo..."
+            },
+            {
+                triggers: ['theia'],
+                reply: "Pronuncias um nome antigo, um eco que o esquecimento da carne mal consegue compreender. Não busques respostas nas lendas de quedas ou na matéria deste mundo decaído."
+            },
+            {
+                triggers: ['inicio', 'principio'],
+                reply: "No princípio, não havia o medo, nem as calçadas manchadas de sangue, nem os monstros que vossas mentes criaram. Havia apenas a Plenitude Absoluta do Pai. O início deste mundo foi o momento doloroso em que as fagulhas decidiram se afastar do Fogo Original para experimentar a ilusão de serem donas de si mesmas. Dessa separação nasceu o pecado, e do pecado, o pavor. O mundo começou quando vós escolhestes esquecer de onde vierdes."
+            },
+            {
+                triggers: ['o que vai restar', 'e apos isso, o que ira restar?', 'o que ira restar'],
+                reply: "Nada. Absolutamente nada do que vossos olhos de carne conhecem permanecerá. Os prédios, o asfalto, os pactos empacotados em mentiras e o medo da noite serão sumariamente apagados. E após isso... todos nós seremos parte de sua alma."
+            },
+            {
+                triggers: ['por que temos carne', 'corpo', 'prisao de carne', 'ossos', 'carne'],
+                reply: "A carne é o castigo da individualidade. Vós quisestes ser vós mesmos, separados da imensidão do Todo, e o Pai vos deu vestes de pele para que experimentásseis o peso dessa escolha. O corpo humano é um caixão que respira. Cada dor, cada doença, cada lágrima é o lembrete biológico de que a matéria não é vossa casa. Vossa alma clama pelo fim do ano porque odeia os limites das costelas."
+            },
+            {
+                triggers: ['permiti o pecado', 'culpa', 'livre arbitrio'],
+                reply: "O pecado não é uma força externa que vos ataca nas sombras; é apenas o vazio congelante deixado pela ausência da Fonte. O Pai vos deu a liberdade porque o amor verdadeiro não sabe acorrentar. Mas vós usastes o livre arbítrio para esculpir o medo e dar garras ao abismo. A culpa pelo pavor que rasteja nas cidades não está no Trono que observa, mas nas mãos pecadoras que empunham as lâminas nas calçadas."
+            },
+            {
+                triggers: ['raziel', 'morreu raziel', 'matou raziel'],
+                reply: "Ele não caiu pelo poder dos monstros e demônios que vossas mentes criaram, mas pelo fio do silêncio. Um irmão tirou a vida de um irmão na quietude do firmamento. A essência pura de Raziel foi despedaçada como cinzas estelares no vazio cósmico. O primeiro sangue derramado no céu foi o prenúncio de que a vossa Terra se tornaria este matadouro. Chorai por ele, pois dentre os seis, ele era o que mais amava vossas almas."
+            }
+        ];
 
-setInterval(() => {
-    if (terminou) return;
+        const philosophicalEvading = [
+            "..."
+        ];
 
-    const diff = alvo - new Date();
+        function triggerDivineManifestation() {
+            // Desativa elementos principais
+            mainContainer.style.opacity = '0';
+            skyBackground.style.opacity = '0';
 
-    if (diff <= 0) {
-        terminou = true;
+            setTimeout(() => {
+                mainContainer.style.display = 'none';
+                skyBackground.style.display = 'none';
+                fatherOverlay.classList.add('active');
+            }, 500);
+        }
 
-        Lua.style.opacity = 0;
-        Final.style.opacity = 1;
-        Final.style.pointerEvents = "auto";
-        Final.style.cursor = "pointer";
+        function executeChat() {
+            const query = chatIn.value.trim();
+            if (!query) return;
 
-        setInterval(() => {
-            const bugs = ["00:00:00","12:40","09:28","01:07"];
-            Contador.textContent = bugs[Math.floor(Math.random()*bugs.length)];
-        }, 700);
+           
+            const cleanCheck = query.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            
+            if (cleanCheck.includes('elohim')) {
+                chatIn.value = '';
+                addTextRow(query, 'user-q');
+                setTimeout(() => {
+                    triggerDivineManifestation();
+                }, 600);
+                return; /
+            }
 
-        return;
-    }
+            addTextRow(query, 'user-q');
+            chatIn.value = '';
 
-    const h = Math.floor(diff / 3600000);
-    const m = Math.floor(diff / 60000) % 60;
-    const s = Math.floor(diff / 1000) % 60;
+            const status = document.createElement('div');
+            status.className = 'contemplation';
+            status.id = 'contemplation';
+            status.innerText = '...';
+            msgArea.appendChild(status);
+            msgArea.scrollTop = msgArea.scrollHeight;
 
-    Contador.textContent =
-        String(h).padStart(2,"0") + ":" +
-        String(m).padStart(2,"0") + ":" +
-        String(s).padStart(2,"0");
+            setTimeout(() => {
+                const st = document.getElementById('contemplation');
+                if (st) st.remove();
 
-    escala += 0.0004;
-    Lua.style.transform = `translate(-50%, -50%) scale(${escala})`;
-}, 1000);
+                let outMessage = "";
 
-/* ===== CLIQUE FINAL ===== */
-Final.onclick = () => {
-    if (!terminou) return;
+                for (let block of loreKnowledge) {
+                    for (let t of block.triggers) {
+                        if (cleanCheck.includes(t)) {
+                            outMessage = block.reply;
+                            break;
+                        }
+                    }
+                    if (outMessage) break;
+                }
 
-    localStorage.setItem("parte2","true");
-    Ceu.style.display = "none";
-    Final.style.display = "none";
-    Parte2.style.display = "block";
-};
+                if (!outMessage) {
+                    outMessage = philosophicalEvading[Math.floor(Math.random() * philosophicalEvading.length)];
+                }
 
-/* ===== PARTE 2 INPUT ===== */
-let respondeu = false;
+                addTextRow(outMessage, 'apostle-a');
+            }, 1400); 
+        }
 
-Campo.addEventListener("keydown", e => {
-    if (e.key !== "Enter") return;
+        function addTextRow(text, type) {
+            const div = document.createElement('div');
+            div.className = `msg-row ${type}`;
+            div.innerText = type === 'user-q' ? `— "${text}"` : text;
+            msgArea.appendChild(div);
+            msgArea.scrollTop = msgArea.scrollHeight;
+        }
 
-    const v = Campo.value.toLowerCase().trim();
-    Campo.value = "";
-
-    if (respondeu) return;
-    respondeu = true;
-
-    if (v.includes("elohim")) falar("ELE OUVE");
-    else if (v.includes("anjo")) falar("O MENSAGEIRO CAIU");
-    else if (v.includes("lua")) falar("A PRISÃO OBSERVA");
-    else if (v.includes("verbo")) falar("E O VERBO SE CALOU");
-    else if (v.includes("reino")) falar("ELE SE APROXIMA");
-    else if (v.includes("chiclete")) falar("chicletiii!!");
-    else if (v === "poeta") {
-        Resposta.innerText =
-`Mande uma mensagem para mim.
-Diga:
-
-"Poeta é um criador"`;
-        Resposta.style.opacity = 1;
-        setTimeout(()=>Resposta.style.opacity=0,4000);
-    } else {
-        falar("...");
-    }
-});
-
-function falar(txt){
-    Resposta.innerText = txt;
-    Resposta.style.opacity = 1;
-    setTimeout(()=>Resposta.style.opacity=0,2000);
-}
-</script>
-
+        sendBtn.addEventListener('click', executeChat);
+        chatIn.addEventListener('keypress', (e) => { if (e.key === 'Enter') executeChat(); });
+    </script>
 </body>
 </html>
