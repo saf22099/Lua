@@ -1,1 +1,312 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>...</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            cursor: default;
+        }
+
+        #word-cloud {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .word {
+            position: absolute;
+            /* Palavras um pouco mais claras */
+            color: rgba(255, 255, 255, 0.28);
+            user-select: none;
+            cursor: default;
+            pointer-events: auto;
+            white-space: nowrap;
+        }
+
+        .word:hover {
+            color: rgba(255, 255, 255, 0.28);
+            cursor: default;
+        }
+
+        /* Tela do Relógio (ao clicar em joshua) */
+        #clock-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            z-index: 10;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #system-clock {
+            color: #ffffff;
+            font-size: 5vw;
+            letter-spacing: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            opacity: 0.85;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Tela 01:14 (Evento de Horário / Bug) */
+        #event-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            z-index: 20;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .glitch-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch-img {
+            max-width: 80%;
+            max-height: 60vh;
+            object-fit: contain;
+            filter: contrast(300%) grayscale(100%) invert(15%);
+            animation: glitch-anim 0.4s infinite steps(2, start);
+            mix-blend-mode: exclusion;
+        }
+
+        .glitch-text {
+            margin-top: 30px;
+            color: #ff0000;
+            font-size: 4rem;
+            font-weight: bold;
+            letter-spacing: 8px;
+            text-shadow: 3px 0 #00ffea, -3px 0 #ff0055;
+            animation: text-flicker 0.2s infinite;
+        }
+
+        @keyframes glitch-anim {
+            0% {
+                transform: translate(0, 0) scale(1);
+                filter: contrast(400%) hue-rotate(0deg) invert(10%);
+                opacity: 0.9;
+            }
+            20% {
+                transform: translate(-5px, 5px) scale(1.02);
+                filter: contrast(500%) hue-rotate(90deg) invert(80%);
+                opacity: 0.4;
+            }
+            40% {
+                transform: translate(5px, -3px) scale(0.98);
+                filter: contrast(300%) hue-rotate(180deg) invert(0%);
+                opacity: 1;
+            }
+            60% {
+                transform: translate(-2px, -5px) scale(1.05);
+                filter: contrast(600%) hue-rotate(270deg) invert(50%);
+                opacity: 0.3;
+            }
+            80% {
+                transform: translate(3px, 4px) scale(0.99);
+                filter: contrast(450%) hue-rotate(45deg) invert(30%);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(0, 0) scale(1);
+                filter: contrast(400%) hue-rotate(0deg) invert(10%);
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes text-flicker {
+            0% { opacity: 0.2; transform: skewX(-5deg); }
+            50% { opacity: 1; transform: skewX(5deg); text-shadow: 5px 0 #ff0000, -5px 0 #0000ff; }
+            100% { opacity: 0.3; transform: skewX(0deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Container da Nuvem de Palavras -->
+    <div id="word-cloud"></div>
+
+    <!-- Tela 1: Apenas o relógio do sistema após clicar em joshua -->
+    <div id="clock-screen">
+        <div id="system-clock">00:00:00</div>
+    </div>
+
+    <!-- Tela 2: Evento 01:14 (Humanidade? + Imagem piscando em alto contraste e bug) -->
+    <div id="event-screen">
+        <div class="glitch-container">
+            <img class="glitch-img" src="https://i.pinimg.com/736x/33/c7/e3/33c7e345240c01c720aacfc1666a3922.jpg" alt="Glitch Image">
+            <div class="glitch-text">HUMANIDADE?</div>
+        </div>
+    </div>
+
+    <script>
+        const wordList = [
+            "elohim", "yahweh", "adonai", "jeova", "deus", "cristo", "jesus", "messias",
+            "espirito", "espirito santo", "profeta", "apocalipse", "genesis", "exodo",
+            "evangelho", "fe", "salvação", "redenção", "graça", "céu", "inferno", "paraiso",
+            "eden", "anjo", "arcanjo", "gabriel", "miguel", "rafael", "uriel", "querubim",
+            "serafim", "lucifer", "satan", "satã", "demonio", "azazel", "belial", "asmodeus",
+            "beelzebub", "leviathan", "mammon", "serpente", "dragao", "besta", "anticristo",
+            "judas", "traidor", "pecado", "culpa", "perdao", "julgamento", "justiça", "misericórdia",
+            "tentação", "queda", "orgulho", "inveja", "ira", "gula", "luxuria", "preguiça",
+            "avareza", "sangue", "carne", "osso", "poeira", "cinzas", "cruz", "espinhos",
+            "altar", "templo", "sacrificio", "oração", "jejum", "profecia", "reino", "arca",
+            "diluvio", "moises", "davi", "salomao", "alma", "espirito", "corpo", "mente",
+            "consciência", "humanidade", "vida", "morte", "renascimento", "verdade", "mentira",
+            "silencio", "eco", "escuridão", "luz", "abismo", "vazio", "eternidade", "infinito",
+            "destino", "inicio", "fim", "ultimo", "primeiro", "observador", "vigia", "escolhido",
+            "esquecido", "perdido", "erro", "falha", "corrija", "observe", "olhe", "escute",
+            "veja", "acorde", "desperte", "continue", "espere", "pare", "fuja", "não", "sim",
+            "porque", "como", "quando", "onde", "quem", "todos", "ninguem", "alguem", "eles",
+            "ele", "ela", "você", "eu", "nós", "eles sabem", "você sabe", "eu sei", "ela viu",
+            "ele voltou", "não olhe", "não responda", "não confie", "não esqueça", "não durma",
+            "não respire", "não fale", "continue olhando", "continue lendo", "vire", "atrás",
+            "embaixo", "acima", "esquerda", "direita", "porta", "janela", "chave", "corrente",
+            "cela", "olhos", "boca", "mãos", "rostos", "sombras", "voz", "sussurro", "grito",
+            "ruído", "estática", "sinal", "frequência", "transmissão", "arquivo", "memória",
+            "lembrança", "esquecimento", "código", "protocolo", "acesso", "desconhecido", "???",
+            "...", "████", "001", "0114", "01:14", "14", "sete", "sete selos", "sete trombetas",
+            "sete pecados", "fim da transmissão", "ele está aqui", "ela está aqui", "você chegou cedo",
+            "você chegou tarde", "já aconteceu", "aconteceu", "vai acontecer", "está acontecendo",
+            "não era para você estar aqui", "eles estão vendo", "eles esperam", "eles lembram",
+            "ninguém saiu", "ninguém entrou", "o relógio parou", "o tempo acabou", "o tempo mente",
+            "não existe saída", "retorne", "continue", "acorde", "HUMANIDADE", "joshua"
+        ];
+
+        const cloud = document.getElementById('word-cloud');
+        const clockScreen = document.getElementById('clock-screen');
+        const systemClock = document.getElementById('system-clock');
+        const eventScreen = document.getElementById('event-screen');
+
+        let eventTriggered = false;
+
+        function checkTime() {
+            if (eventTriggered) return;
+            const now = new Date();
+            if (now.getHours() === 1 && now.getMinutes() === 14) {
+                triggerEventScreen();
+            }
+        }
+
+        function triggerEventScreen() {
+            eventTriggered = true;
+            cloud.style.display = 'none';
+            clockScreen.style.display = 'none';
+            eventScreen.style.display = 'flex';
+        }
+
+        function generateCloud() {
+            cloud.innerHTML = '';
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            
+            // Algoritmo de distribuição sem sobreposição (Grid / Caixa de Ocupação)
+            const placedRects = [];
+            
+            wordList.forEach(text => {
+                const span = document.createElement('span');
+                span.className = 'word';
+                span.innerText = text;
+                span.style.fontSize = '14px';
+                
+                cloud.appendChild(span);
+                
+                let attempts = 0;
+                let x, y, width, height, overlap;
+                
+                // Pega o tamanho real do elemento renderizado
+                width = span.offsetWidth || (text.length * 9);
+                height = 20;
+
+                do {
+                    overlap = false;
+                    // Deixa margens nas bordas da tela
+                    x = Math.random() * (screenWidth - width - 40) + 20;
+                    y = Math.random() * (screenHeight - height - 40) + 20;
+                    
+                    // Verifica colisão com palavras já posicionadas (com folga de espaçamento)
+                    const padding = 8;
+                    for (let r of placedRects) {
+                        if (
+                            x < r.x + r.width + padding &&
+                            x + width + padding > r.x &&
+                            y < r.y + r.height + padding &&
+                            y + height + padding > r.y
+                        ) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+                    attempts++;
+                } while (overlap && attempts < 100);
+
+                placedRects.push({ x, y, width, height });
+                
+                span.style.left = x + 'px';
+                span.style.top = y + 'px';
+
+                // Se a palavra for "joshua", adiciona o evento de clique nela
+                if (text === "joshua") {
+                    span.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (eventTriggered) return;
+                        cloud.style.display = 'none';
+                        clockScreen.style.display = 'flex';
+                        updateClock();
+                    });
+                }
+            });
+        }
+
+        // Gera a nuvem e redistribui caso redimensione
+        generateCloud();
+
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            systemClock.innerText = `${h}:${m}:${s}`;
+        }
+        setInterval(updateClock, 1000);
+
+        // Checar o horário a cada segundo
+        setInterval(checkTime, 1000);
+        checkTime();
+    </script>
+</body>
+</html>
